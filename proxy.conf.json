@@ -1,0 +1,10 @@
+{
+    "/api": {
+      "target": "https://api-samenmeten.rivm.nl/v1.0",
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
+  }
