@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Thing } from './services/thing.model';
 import { MapComponent } from './map.component';
+import {TableComponent} from './sensor-table.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, MapComponent],
+  imports: [CommonModule, MapComponent, TableComponent],
   template: `
     <div>
       <h1>Things</h1>
+      <app-data-table></app-data-table>
       <ul>
         <li *ngFor="let thing of things$ | async">{{ thing.name }}</li>
       </ul>
