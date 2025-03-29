@@ -1,5 +1,5 @@
 // table.component.ts
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -9,13 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DataService } from './data.service';
-
-export interface TableData {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Observable } from 'rxjs';
+import {Thing} from './services/thing.model';
 
 @Component({
   selector: 'app-data-table',
@@ -33,29 +28,27 @@ export interface TableData {
   templateUrl: './sensor-table.component.html',
   styleUrls: ['./sensor-table.component.css']
 })
-export class TableComponent implements OnInit {
-  private dataService = inject(DataService);
+export class TableComponent implements OnInit, AfterViewInit {
+  @Input() data$: Observable<Thing[]> | undefined; // Accept observable as input
 
   displayedColumns: string[] = ['select', 'id', 'name', 'description'];
-  dataSource = new MatTableDataSource<TableData>([]);
-  selection = new SelectionModel<TableData>(true, []);
+  dataSource = new MatTableDataSource<Thing>([]);
+  selection = new SelectionModel<Thing>(true, []);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit() {
-    this.loadData();
+    if (this.data$) {
+      this.data$.subscribe(data => {
+        this.dataSource.data = data;
+      });
+    }
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  loadData() {
-    this.dataService.getData().subscribe(data => {
-      this.dataSource.data = data;
-    });
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -76,11 +69,11 @@ export class TableComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: TableData): string {
+  checkboxLabel(row?: Thing): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.name}`;
   }
 
   getSelectedRows() {

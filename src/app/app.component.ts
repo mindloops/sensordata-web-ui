@@ -12,7 +12,7 @@ import {TableComponent} from './sensor-table.component';
   template: `
     <div>
       <h1>Things</h1>
-      <app-data-table></app-data-table>
+      <app-data-table  [data$]="things$"></app-data-table>
       <ul>
         <li *ngFor="let thing of things$ | async">{{ thing.name }}</li>
       </ul>
