@@ -1,16 +1,17 @@
 // table.component.ts
-import { Component, OnInit, ViewChild, Input, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Observable } from 'rxjs';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {SelectionModel} from '@angular/cdk/collections';
+import {Observable} from 'rxjs';
 import {Thing} from './services/thing.model';
+import {MatChip} from '@angular/material/chips';
 
 @Component({
   selector: 'app-data-table',
@@ -23,7 +24,8 @@ import {Thing} from './services/thing.model';
     MatCheckboxModule,
     MatButtonModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatChip,
   ],
   templateUrl: './sensor-table.component.html',
   styleUrls: ['./sensor-table.component.css']
@@ -31,7 +33,7 @@ import {Thing} from './services/thing.model';
 export class TableComponent implements OnInit, AfterViewInit {
   @Input() data$: Observable<Thing[]> | undefined; // Accept observable as input
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'description'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'observedProperties'];
   dataSource = new MatTableDataSource<Thing>([]);
   selection = new SelectionModel<Thing>(true, []);
 

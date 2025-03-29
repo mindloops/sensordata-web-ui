@@ -1,0 +1,35 @@
+/* app.component.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Make the container take up the full viewport height */
+  margin: 0;
+}
+
+.menu {
+  background-color: #f0f0f0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.logo {
+  height: 100px; /* Adjust as needed */
+  margin-right: 10px;
+}
+
+.content {
+  display: flex;
+  flex-grow: 1; /* Allow content to grow and fill remaining space */
+}
+
+.data-table {
+  flex: 1;
+  overflow: auto; /* Enable scrolling if content overflows */
+}
+
+.map {
+  flex: 1;
+  overflow: hidden; /* Prevent map content from overflowing */
+}

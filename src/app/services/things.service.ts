@@ -8,13 +8,23 @@ import { Thing } from './thing.model';
   providedIn: 'root'
 })
 export class ThingsService {
-  private apiUrl = '/api/Things';
+  private apiUrl = '/api/Things?$expand=Datastreams/ObservedProperty($select=description)';
 
   constructor(private http: HttpClient) { }
 
   getThings(): Observable<Thing[]> {
-    return this.http.get<{value: Thing[] }>(this.apiUrl).pipe(
-      map(response => response.value)
+    return this.http.get<any>(this.apiUrl).pipe(
+      map((response) => {
+        return response.value.map((thingData: any) => {
+          return {
+            id: thingData['@iot.id'],
+            name: thingData.name,
+            observedProperties: thingData.Datastreams.map(
+              (dataStream: any) => dataStream.ObservedProperty.description
+            ),
+          };
+        });
+      })
     );
   }
 }

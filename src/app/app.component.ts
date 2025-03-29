@@ -10,16 +10,14 @@ import {TableComponent} from './sensor-table.component';
   selector: 'app-root',
   imports: [CommonModule, MapComponent, TableComponent],
   template: `
-    <div>
-      <h1>Things</h1>
-      <app-data-table  [data$]="things$"></app-data-table>
-      <ul>
-        <li *ngFor="let thing of things$ | async">{{ thing.name }}</li>
-      </ul>
-      <app-map (polygonComplete)="onPolygonComplete($event)"></app-map>
-      <div *ngIf="polygonData" class="result-panel">
-        <h3>Drawn Polygon Data:</h3>
-        <pre>{{ polygonData | json }}</pre>
+    <div class="app-container">
+      <div class="menu">
+        <img src="logo.svg" alt="Logo" class="logo">
+        <h1>Sensordata viewer</h1>
+      </div>
+      <div class="content">
+        <app-data-table class="data-table" [data$]="things$"></app-data-table>
+        <app-map class="map" (polygonComplete)="onPolygonComplete($event)"></app-map>
       </div>
     </div>
   `,
