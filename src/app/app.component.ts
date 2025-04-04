@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ThingsService } from './services/things.service';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Thing } from './services/thing.model';
 import { MapComponent } from './map.component';
-import {TableComponent} from './sensor-table.component';
+import { TableComponent } from './sensor-table.component';
 
 @Component({
   selector: 'app-root',
@@ -24,21 +24,23 @@ import {TableComponent} from './sensor-table.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  things$!: Observable<Thing[]>;
+  private thingsSubject = new BehaviorSubject<Thing[]>([]);
+  things$ = this.thingsSubject.asObservable();
 
   constructor(private thingsService: ThingsService) { }
 
   ngOnInit(): void {
-    this.things$ = this.thingsService.getThings();
+    this.fetchThings('POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'); // Fetch all things initially
   }
 
-  polygonData: any = null;
+  onPolygonComplete(wkt: string): void {
+    this.fetchThings(wkt); // Fetch filtered data based on WKT
+    console.log('Polygon WKT:', wkt); // Log the WKT for debugging
+  }
 
-  onPolygonComplete(data: any): void {
-    console.log('Polygon drawing completed:', data);
-    this.polygonData = data;
-
-    // Here you can perform any additional processing with the polygon data
-    // For example, send it to a server, perform calculations, etc.
+  private fetchThings(wkt: string): void {
+    this.thingsService.getThings(wkt).subscribe((things) => {
+      this.thingsSubject.next(things); // Update the BehaviorSubject with new data
+    });
   }
 }

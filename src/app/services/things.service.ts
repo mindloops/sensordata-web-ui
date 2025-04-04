@@ -12,8 +12,10 @@ export class ThingsService {
 
   constructor(private http: HttpClient) { }
 
-  getThings(): Observable<Thing[]> {
-    return this.http.get<any>(this.apiUrl).pipe(
+  getThings(wkt: string = 'POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'): Observable<Thing[]> {
+    let url = this.apiUrl;
+    url += `&$filter=st_intersects(Locations/location, geography'SRID=4326;${wkt}')`;
+    return this.http.get<any>(url).pipe(
       map((response) => {
         return response.value.map((thingData: any) => {
           return {

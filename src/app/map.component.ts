@@ -15,6 +15,7 @@ import { fromLonLat } from 'ol/proj';
 import { Thing } from './services/thing.model';
 import { Observable } from 'rxjs';
 import { ThingsService } from './services/things.service';
+import WKT from 'ol/format/WKT';
 
 @Component({
   selector: 'app-map',
@@ -66,7 +67,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   things$!: Observable<Thing[]>;
   
   @ViewChild('map') mapElement!: ElementRef;
-  @Output() polygonComplete = new EventEmitter<any>();
+  @Output() polygonComplete = new EventEmitter<string>();
 
   private map!: Map;
   private pointsSource = new VectorSource();
@@ -126,8 +127,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       target: this.mapElement.nativeElement,
       layers: [osmLayer, pointsLayer, drawLayer],
       view: new View({
-        center: fromLonLat([0, 0]),
-        zoom: 2
+        center: fromLonLat([5.2, 52.1]), // Centered on the Netherlands
+        zoom: 7 // Suitable zoom level for the Netherlands
       })
     });
 
@@ -203,8 +204,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private emitPolygonData(feature: Feature): void {
-    const geoJsonFormat = new GeoJSON();
-    const geoJson = geoJsonFormat.writeFeatureObject(feature);
-    this.polygonComplete.emit(geoJson);
+    const wktFormat = new WKT();
+    const wkt = wktFormat.writeFeature(feature); // Convert the feature to WKT
+    this.polygonComplete.emit(wkt); // Emit the WKT string
   }
 }
