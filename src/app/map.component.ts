@@ -64,7 +64,7 @@ import WKT from 'ol/format/WKT';
 })
 export class MapComponent implements OnInit, AfterViewInit {
   things$!: Observable<Thing[]>;
-  
+
   @ViewChild('map') mapElement!: ElementRef;
   @Output() polygonComplete = new EventEmitter<string>();
 
@@ -79,7 +79,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.things$ = this.thingsService.getThings();
   }
-  
+
   ngAfterViewInit(): void {
     this.initMap();
     this.addPoints();
@@ -205,22 +205,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private emitPolygonData(feature: Feature): void {
     const wktFormat = new WKT();
-    const originalGeometry = feature.getGeometry();
-
-    if (originalGeometry) {
-      // Clone the geometry to avoid modifying the original
-      const clonedGeometry = originalGeometry.clone();
-      // Transform the cloned geometry to EPSG:4326
-      clonedGeometry.transform('EPSG:3857', 'EPSG:4326');
-
-      // Create a new feature with the transformed geometry
-      const transformedFeature = new Feature({
-        geometry: clonedGeometry,
-      });
-
-      const wkt = wktFormat.writeFeature(transformedFeature); // Convert the feature to WKT
-      const formattedWkt = `SRID=4326;${wkt}`; // Prepend SRID=4326
-      this.polygonComplete.emit(formattedWkt); // Emit the formatted WKT string
-    }
+    const wkt = wktFormat.writeFeatures([feature], {
+      dataProjection: 'EPSG:4326',     // projection for the output data
+      featureProjection: 'EPSG:3857'   // projection currently used by features
+    });
+    const formattedWkt = `SRID=4326;${wkt}`; // Prepend SRID=4326
+    this.polygonComplete.emit(formattedWkt); // Emit the formatted WKT string
   }
+
 }
