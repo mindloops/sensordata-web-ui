@@ -1,20 +1,16 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgxEchartsModule } from 'ngx-echarts';
-import { ThingsService } from './services/things.service';
-import { Thing } from './services/thing.model';
-import { DatastreamObservations } from './services/observation.model';
-import { EChartsOption } from 'echarts';
-import { forkJoin } from 'rxjs';
-import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgxEchartsDirective, provideEchartsCore} from 'ngx-echarts';
+import {ThingsService} from './services/things.service';
+import {Thing} from './services/thing.model';
+import {DatastreamObservations} from './services/observation.model';
+import {EChartsOption} from 'echarts';
+import {forkJoin} from 'rxjs';
 import * as echarts from 'echarts/core';
-import { TitleComponent } from 'echarts/components';
-import { TooltipComponent } from 'echarts/components';
-import { LegendComponent } from 'echarts/components';
-import { LineChart } from 'echarts/charts';
-import { BarChart } from 'echarts/charts';
-import { GridComponent } from 'echarts/components';
-import { CanvasRenderer } from 'echarts/renderers';
+import {GridComponent, LegendComponent, TitleComponent, TooltipComponent} from 'echarts/components';
+import {BarChart, LineChart} from 'echarts/charts';
+import {CanvasRenderer} from 'echarts/renderers';
+
 echarts.use([BarChart, GridComponent, CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, LineChart]);
 
 @Component({
@@ -76,9 +72,9 @@ export class ChartsPageComponent implements OnInit, OnChanges {
 
     // Get all unique datastream IDs from selected things
     const datastreamIds = this.selectedThings.flatMap(thing => thing.datastreamIds);
-    
+
     // Create an array of observables for each datastream
-    const observables = datastreamIds.map(id => 
+    const observables = datastreamIds.map(id =>
       this.thingsService.getObservations(id)
     );
 
@@ -100,7 +96,7 @@ export class ChartsPageComponent implements OnInit, OnChanges {
 
   private groupDatastreamsByProperty(datastreams: DatastreamObservations[]): Record<string, DatastreamObservations[]> {
     const grouped: Record<string, DatastreamObservations[]> = {};
-    
+
     this.selectedThings.forEach(thing => {
       thing.datastreamIds.forEach((id, index) => {
         const property = thing.observedProperties[index];

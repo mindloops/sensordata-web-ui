@@ -2,19 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Thing } from './thing.model';
+import {DEFAULT_LOCATION_SELECTION, Thing} from './thing.model';
 import { DatastreamObservations } from './observation.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThingsService {
-  private apiUrl = '/api/Things?$expand=Locations,Datastreams/ObservedProperty($select=description)';
 
   constructor(private http: HttpClient) { }
 
-  getThings(wkt: string = 'POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'): Observable<Thing[]> {
-    let url = this.apiUrl;
+  getThings(wkt: string = DEFAULT_LOCATION_SELECTION): Observable<Thing[]> {
+    let url = '/api/Things?$expand=Locations,Datastreams/ObservedProperty($select=description)';
     url += `&$filter=st_intersects(Locations/location, geography'SRID=4326;${wkt}')`;
     return this.http.get<any>(url).pipe(
       map((response) => {

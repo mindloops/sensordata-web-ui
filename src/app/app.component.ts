@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ThingsService } from './services/things.service';
 import { CommonModule } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Thing } from './services/thing.model';
+import {DEFAULT_LOCATION_SELECTION, Thing} from './services/thing.model';
 import { MapComponent } from './map.component';
 import { TableComponent } from './sensor-table.component';
 import { ChartsPageComponent } from './charts-page.component';
@@ -17,19 +17,19 @@ import { ChartsPageComponent } from './charts-page.component';
         <h1>Sensordata viewer</h1>
       </div>
       <div class="content">
-        <app-data-table 
-          class="data-table" 
-          [data$]="things$" 
+        <app-data-table
+          class="data-table"
+          [data$]="things$"
           (processSelected)="onProcessSelected($event)">
         </app-data-table>
-        <app-map 
-          class="map" 
-          (polygonComplete)="onPolygonComplete($event)" 
+        <app-map
+          class="map"
+          (polygonComplete)="onPolygonComplete($event)"
           (polygonCanceled)="onPolygonCanceled()">
         </app-map>
       </div>
-      <app-charts-page 
-        *ngIf="selectedThings.length > 0" 
+      <app-charts-page
+        *ngIf="selectedThings.length > 0"
         [selectedThings]="selectedThings">
       </app-charts-page>
     </div>
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
   constructor(private thingsService: ThingsService) { }
 
   ngOnInit(): void {
-    this.fetchThings('POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'); // Fetch all things initially
+    this.fetchThings(DEFAULT_LOCATION_SELECTION); // Fetch all things initially
   }
 
   onPolygonComplete(wkt: string): void {
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
   }
 
   onPolygonCanceled(): void {
-    this.fetchThings('POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'); // Fetch all things again
+    this.fetchThings(DEFAULT_LOCATION_SELECTION); // Fetch all things again
     console.log('Polygon canceled');
   }
 

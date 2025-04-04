@@ -1,3 +1,5 @@
+export const DEFAULT_LOCATION_SELECTION = 'POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'
+
 export interface Thing {
   id: number;
   name: string;
