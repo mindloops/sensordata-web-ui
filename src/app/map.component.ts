@@ -67,6 +67,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   @ViewChild('map') mapElement!: ElementRef;
   @Output() polygonComplete = new EventEmitter<string>();
+  @Output() polygonCanceled = new EventEmitter<void>();
 
   private map!: Map;
   private pointsSource = new VectorSource();
@@ -181,9 +182,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   clearDrawing(): void {
     this.drawSource.clear();
+    this.polygonCanceled.emit();
     if (this.isDrawModeActive) {
       this.toggleDrawMode();
- //     this.polygonCanceled.emit('Drawing cleared');
     }
   }
 
@@ -208,9 +209,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     const wkt = wktFormat.writeFeatures([feature], {
       dataProjection: 'EPSG:4326',     // projection for the output data
       featureProjection: 'EPSG:3857'   // projection currently used by features
-    });
-    const formattedWkt = `SRID=4326;${wkt}`; // Prepend SRID=4326
-    this.polygonComplete.emit(formattedWkt); // Emit the formatted WKT string
+    });;
+    this.polygonComplete.emit(wkt); // Emit the formatted WKT string
   }
 
 }

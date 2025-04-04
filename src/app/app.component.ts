@@ -17,7 +17,7 @@ import { TableComponent } from './sensor-table.component';
       </div>
       <div class="content">
         <app-data-table class="data-table" [data$]="things$"></app-data-table>
-        <app-map class="map" (polygonComplete)="onPolygonComplete($event)"></app-map>
+        <app-map class="map" (polygonComplete)="onPolygonComplete($event)" (polygonCanceled)="onPolygonCanceled()"></app-map>
       </div>
     </div>
   `,
