@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Thing } from './thing.model';
+import { DatastreamObservations } from './observation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,31 @@ export class ThingsService {
               lat: thingData.Locations[0].location.coordinates[1],
               lon: thingData.Locations[0].location.coordinates[0]
             },
+            datastreamIds: thingData.Datastreams.map(
+              (dataStream: any) => dataStream['@iot.id']
+            ),
             observedProperties: thingData.Datastreams.map(
-              (dataStream: any) => dataStream.ObservedProperty.description
+              (dataStream: any) =>
+                 dataStream.ObservedProperty.description
             ),
           };
         });
+      })
+    );
+  }
+
+  getObservations(datastreamId: string): Observable<DatastreamObservations> {
+    const url = `/api/Datastreams(${datastreamId})&$expand=Observations($select=result,phenomenonTime)`;
+
+    return this.http.get<any>(url).pipe(
+      map((response) => {
+        return {
+          id: response['@iot.id'],
+          observations: response.Observations.map((observation: any) => ({
+            time: observation.phenomenonTime,
+            result: observation.result
+          }))
+        };
       })
     );
   }
