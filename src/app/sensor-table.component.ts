@@ -35,7 +35,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   @Output() processSelected = new EventEmitter<Thing[]>();
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'observedProperties'];
+  displayedColumns: string[] = ['select', 'name', 'observedProperties'];
   dataSource = new MatTableDataSource<Thing>([]);
   selection = new SelectionModel<Thing>(true, []);
 
