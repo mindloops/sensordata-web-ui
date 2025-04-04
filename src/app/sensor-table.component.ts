@@ -1,5 +1,5 @@
 // table.component.ts
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
@@ -32,6 +32,8 @@ import {MatChip} from '@angular/material/chips';
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @Input() data$: Observable<Thing[]> | undefined; // Accept observable as input
+
+  @Output() processSelected = new EventEmitter<Thing[]>();
 
   displayedColumns: string[] = ['select', 'id', 'name', 'observedProperties'];
   dataSource = new MatTableDataSource<Thing>([]);
@@ -79,7 +81,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   getSelectedRows() {
-    return this.selection.selected;
+    this.processSelected.emit(this.selection.selected);
   }
 
   applyFilter(event: Event) {

@@ -5,10 +5,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Thing } from './services/thing.model';
 import { MapComponent } from './map.component';
 import { TableComponent } from './sensor-table.component';
+import { ChartsPageComponent } from './charts-page.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, MapComponent, TableComponent],
+  imports: [CommonModule, MapComponent, TableComponent, ChartsPageComponent],
   template: `
     <div class="app-container">
       <div class="menu">
@@ -16,9 +17,21 @@ import { TableComponent } from './sensor-table.component';
         <h1>Sensordata viewer</h1>
       </div>
       <div class="content">
-        <app-data-table class="data-table" [data$]="things$"></app-data-table>
-        <app-map class="map" (polygonComplete)="onPolygonComplete($event)" (polygonCanceled)="onPolygonCanceled()"></app-map>
+        <app-data-table 
+          class="data-table" 
+          [data$]="things$" 
+          (processSelected)="onProcessSelected($event)">
+        </app-data-table>
+        <app-map 
+          class="map" 
+          (polygonComplete)="onPolygonComplete($event)" 
+          (polygonCanceled)="onPolygonCanceled()">
+        </app-map>
       </div>
+      <app-charts-page 
+        *ngIf="selectedThings.length > 0" 
+        [selectedThings]="selectedThings">
+      </app-charts-page>
     </div>
   `,
   styleUrls: ['./app.component.css']
@@ -26,6 +39,7 @@ import { TableComponent } from './sensor-table.component';
 export class AppComponent implements OnInit {
   private thingsSubject = new BehaviorSubject<Thing[]>([]);
   things$ = this.thingsSubject.asObservable();
+  selectedThings: Thing[] = [];
 
   constructor(private thingsService: ThingsService) { }
 
@@ -41,6 +55,10 @@ export class AppComponent implements OnInit {
   onPolygonCanceled(): void {
     this.fetchThings('POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'); // Fetch all things again
     console.log('Polygon canceled');
+  }
+
+  onProcessSelected(selectedThings: Thing[]): void {
+    this.selectedThings = selectedThings;
   }
 
   private fetchThings(wkt: string): void {

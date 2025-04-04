@@ -40,7 +40,7 @@ export class ThingsService {
   }
 
   getObservations(datastreamId: string): Observable<DatastreamObservations> {
-    const url = `/api/Datastreams(${datastreamId})&$expand=Observations($select=result,phenomenonTime)`;
+    const url = `/api/Datastreams(${datastreamId})?$expand=Observations($select=result,phenomenonTime)`;
 
     return this.http.get<any>(url).pipe(
       map((response) => {
