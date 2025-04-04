@@ -6,7 +6,6 @@ import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
-import GeoJSON from 'ol/format/GeoJSON';
 import { Draw, Modify, Snap } from 'ol/interaction';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Feature } from 'ol';
@@ -184,6 +183,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.drawSource.clear();
     if (this.isDrawModeActive) {
       this.toggleDrawMode();
+ //     this.polygonCanceled.emit('Drawing cleared');
     }
   }
 
@@ -205,7 +205,22 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private emitPolygonData(feature: Feature): void {
     const wktFormat = new WKT();
-    const wkt = wktFormat.writeFeature(feature); // Convert the feature to WKT
-    this.polygonComplete.emit(wkt); // Emit the WKT string
+    const originalGeometry = feature.getGeometry();
+
+    if (originalGeometry) {
+      // Clone the geometry to avoid modifying the original
+      const clonedGeometry = originalGeometry.clone();
+      // Transform the cloned geometry to EPSG:4326
+      clonedGeometry.transform('EPSG:3857', 'EPSG:4326');
+
+      // Create a new feature with the transformed geometry
+      const transformedFeature = new Feature({
+        geometry: clonedGeometry,
+      });
+
+      const wkt = wktFormat.writeFeature(transformedFeature); // Convert the feature to WKT
+      const formattedWkt = `SRID=4326;${wkt}`; // Prepend SRID=4326
+      this.polygonComplete.emit(formattedWkt); // Emit the formatted WKT string
+    }
   }
 }

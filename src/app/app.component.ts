@@ -38,6 +38,11 @@ export class AppComponent implements OnInit {
     console.log('Polygon WKT:', wkt); // Log the WKT for debugging
   }
 
+  onPolygonCanceled(): void {
+    this.fetchThings('POLYGON((-180 -90,180 -90,180 90,-180 90,-180 -90))'); // Fetch all things again
+    console.log('Polygon canceled');
+  }
+
   private fetchThings(wkt: string): void {
     this.thingsService.getThings(wkt).subscribe((things) => {
       this.thingsSubject.next(things); // Update the BehaviorSubject with new data
