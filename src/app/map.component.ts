@@ -12,6 +12,9 @@ import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Feature } from 'ol';
 import { Point, Polygon } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
+import { Thing } from './services/thing.model';
+import { Observable } from 'rxjs';
+import { ThingsService } from './services/things.service';
 
 @Component({
   selector: 'app-map',
@@ -60,6 +63,8 @@ import { fromLonLat } from 'ol/proj';
   `]
 })
 export class MapComponent implements OnInit, AfterViewInit {
+  things$!: Observable<Thing[]>;
+  
   @ViewChild('map') mapElement!: ElementRef;
   @Output() polygonComplete = new EventEmitter<any>();
 
@@ -69,13 +74,15 @@ export class MapComponent implements OnInit, AfterViewInit {
   private draw: Draw | null = null;
   isDrawModeActive = false;
 
-  constructor() { }
+  constructor(private thingsService: ThingsService) { }
 
-  ngOnInit(): void { }
-
+  ngOnInit(): void {
+    this.things$ = this.thingsService.getThings();
+  }
+  
   ngAfterViewInit(): void {
     this.initMap();
-    this.addRandomPoints(20);
+    this.addPoints();
   }
 
   private initMap(): void {
@@ -179,28 +186,20 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private addRandomPoints(count: number): void {
-    const features = [];
+  private addPoints(): void {
+    this.things$.subscribe(things => {
+      things.forEach(thing => {
+        const lon = thing.location.lon;
+        const lat = thing.location.lat;
 
-    for (let i = 0; i < count; i++) {
-      // Generate random coordinates within a reasonable range
-      const lon = Math.random() * 360 - 180;
-      const lat = Math.random() * 170 - 85;
+        const point = new Feature({
+          geometry: new Point(fromLonLat([lon, lat])),
+          name: thing.name
+        });
 
-      const point = new Feature({
-        geometry: new Point(fromLonLat([lon, lat])),
-        name: `Point ${i + 1}`
+        this.pointsSource.addFeature(point);
       });
-
-      features.push(point);
-    }
-
-    this.pointsSource.addFeatures(features);
-
-    // Create GeoJSON representation for demonstration purposes
-    const geoJsonFormat = new GeoJSON();
-    const geoJsonString = geoJsonFormat.writeFeatures(features);
-    console.log('GeoJSON data:', geoJsonString);
+    });
   }
 
   private emitPolygonData(feature: Feature): void {

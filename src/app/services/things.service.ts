@@ -8,7 +8,7 @@ import { Thing } from './thing.model';
   providedIn: 'root'
 })
 export class ThingsService {
-  private apiUrl = '/api/Things?$expand=Datastreams/ObservedProperty($select=description)';
+  private apiUrl = '/api/Things?$expand=Locations,Datastreams/ObservedProperty($select=description)';
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +19,10 @@ export class ThingsService {
           return {
             id: thingData['@iot.id'],
             name: thingData.name,
+            location: {
+              lat: thingData.Locations[0].location.coordinates[1],
+              lon: thingData.Locations[0].location.coordinates[0]
+            },
             observedProperties: thingData.Datastreams.map(
               (dataStream: any) => dataStream.ObservedProperty.description
             ),
