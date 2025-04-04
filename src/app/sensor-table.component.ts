@@ -80,7 +80,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.name}`;
   }
 
-  getSelectedRows() {
+  renderDetails() {
     this.processSelected.emit(this.selection.selected);
   }
 

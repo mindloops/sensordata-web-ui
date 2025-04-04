@@ -11,6 +11,7 @@ import {GridComponent, LegendComponent, TitleComponent, TooltipComponent} from '
 import {BarChart, LineChart} from 'echarts/charts';
 import {CanvasRenderer} from 'echarts/renderers';
 
+// workaround for https://github.com/xieziyu/ngx-echarts/issues/437
 echarts.use([BarChart, GridComponent, CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, LineChart]);
 
 @Component({
@@ -90,7 +91,7 @@ export class ChartsPageComponent implements OnInit, OnChanges {
 
     this.charts = Object.entries(groupedDatastreams).map(([property, streams]) => ({
       title: property,
-      options: this.createChartOptions(property, streams)
+      options: this.createChartOptions(streams)
     }));
   }
 
@@ -113,24 +114,20 @@ export class ChartsPageComponent implements OnInit, OnChanges {
     return grouped;
   }
 
-  private createChartOptions(property: string, datastreams: DatastreamObservations[]): EChartsOption {
+  private createChartOptions(datastreams: DatastreamObservations[]): EChartsOption {
     return {
-      title: {
-        text: property,
-        left: 'center'
-      },
       tooltip: {
         trigger: 'axis',
         formatter: '{b}: {c}'
       },
       legend: {
-        data: datastreams.map(d => d.id),
         top: 30
       },
       xAxis: {
         type: 'time',
         axisLabel: {
-          formatter: '{yyyy}-{MM}-{dd} {HH}:{mm}'
+          rotate: 45,
+          formatter: '{HH}:{mm}'
         }
       },
       yAxis: {
