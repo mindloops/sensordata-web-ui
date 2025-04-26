@@ -2,7 +2,7 @@ import { PagesFunction } from '@cloudflare/workers-types';
 
 const API_URL = 'https://api-samenmeten.rivm.nl/v1.0';
 
-export const onRequestOptions: PagesFunction = async () => {
+export const onRequestOptions = async () => {
   return new Response(null, {
     status: 204,
     headers: {
@@ -14,7 +14,7 @@ export const onRequestOptions: PagesFunction = async () => {
   });
 };
 
-export const onRequest: PagesFunction = async (context) => {
+export const onRequest = async (context) => {
   const targetUrl = API_URL + new URL(context.request.url).pathname;
 
   const immutableResponse = await fetch(
