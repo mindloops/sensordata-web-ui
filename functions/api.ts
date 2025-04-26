@@ -1,5 +1,3 @@
-import { PagesFunction } from '@cloudflare/workers-types';
-
 const API_URL = 'https://api-samenmeten.rivm.nl/v1.0';
 
 export const onRequestOptions = async () => {
@@ -15,10 +13,10 @@ export const onRequestOptions = async () => {
 };
 
 export const onRequest = async (context) => {
-  const targetUrl = API_URL + new URL(context.request.url).pathname;
+  console.log(`[LOGGING FROM /api]: Request came from ${context.request.url}`)
 
   const immutableResponse = await fetch(
-    new Request(targetUrl, context.request),
+    new Request(API_URL, context.request),
   );
 
   const response = new Response(immutableResponse.body, immutableResponse);
