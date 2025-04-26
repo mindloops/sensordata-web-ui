@@ -25,10 +25,10 @@ export class ThingsService {
               lat: thingData.Locations[0].location.coordinates[1],
               lon: thingData.Locations[0].location.coordinates[0]
             },
-            datastreamIds: thingData.Datastreams.map(
+            datastreamIds: thingData.Datastreams?.map(
               (dataStream: any) => dataStream['@iot.id']
             ),
-            observedProperties: thingData.Datastreams.map(
+            observedProperties: thingData.Datastreams?.map(
               (dataStream: any) =>
                  dataStream.ObservedProperty.description
             ),

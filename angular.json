@@ -58,15 +58,13 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "proxyConfig": "proxy.conf.json"
-          },
           "configurations": {
             "production": {
               "buildTarget": "sensordata-web-ui:build:production"
             },
             "development": {
-              "buildTarget": "sensordata-web-ui:build:development"
+              "buildTarget": "sensordata-web-ui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
