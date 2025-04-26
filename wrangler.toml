@@ -1,9 +1,0 @@
-name = "sensordata-web-ui"
-
-compatibility_date = "2025-03-31"
-send_metrics = false
-pages_build_output_dir = "dist/sensordata-web-ui/browser"
-
-[dev]
-ip = "0.0.0.0"
-port = 5000
