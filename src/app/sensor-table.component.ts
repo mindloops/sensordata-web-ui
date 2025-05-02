@@ -55,28 +55,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.dataSource.data);
-  }
-
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: Thing): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
+  checkboxLabel(row: Thing): string {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.name}`;
   }
 

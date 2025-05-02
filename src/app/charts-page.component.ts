@@ -134,7 +134,7 @@ export class ChartsPageComponent implements OnInit, OnChanges {
         type: 'value'
       },
       series: datastreams.map(datastream => ({
-        name: datastream.id,
+        name: datastream.name,
         type: 'line',
         data: datastream.observations.map(obs => ([
           new Date(obs.time),

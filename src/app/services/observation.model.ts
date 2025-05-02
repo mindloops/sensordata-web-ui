@@ -5,5 +5,6 @@ export interface Observation {
 
 export interface DatastreamObservations {
   id: string; // The ID of the datastream
+  name: string; // The name of the datastream
   observations: Observation[]; // Array of observations
 }

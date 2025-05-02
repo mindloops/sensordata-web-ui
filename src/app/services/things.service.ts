@@ -45,10 +45,11 @@ export class ThingsService {
       map((response) => {
         return {
           id: response['@iot.id'],
-          observations: response.Observations.map((observation: any) => ({
+          name: response.name,
+          observations: response.Observations?.map((observation: any) => ({
             time: observation.phenomenonTime,
             result: observation.result
-          }))
+          })) ?? []
         };
       })
     );
