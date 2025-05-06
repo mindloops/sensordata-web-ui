@@ -15,19 +15,30 @@ import { Thing } from './services/thing.model';
 import { Observable } from 'rxjs';
 import { ThingsService } from './services/things.service';
 import WKT from 'ol/format/WKT';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
   template: `
     <div class="map-container">
       <div #map class="map"></div>
       <div class="map-controls">
-        <button (click)="toggleDrawMode()" class="control-button">
+        <button mat-raised-button color="primary"
+                (click)="toggleDrawMode()"
+                matTooltip="{{ isDrawModeActive ? 'Cancel polygon drawing' : 'Draw a polygon to filter sensors' }}">
+          <mat-icon>{{ isDrawModeActive ? 'close' : 'edit' }}</mat-icon>
           {{ isDrawModeActive ? 'Cancel Drawing' : 'Draw Polygon' }}
         </button>
-        <button (click)="clearDrawing()" class="control-button">Clear Drawing</button>
+        <button mat-raised-button color="warn"
+                (click)="clearDrawing()"
+                matTooltip="Clear the drawn polygon">
+          <mat-icon>delete</mat-icon>
+          Clear Drawing
+        </button>
       </div>
     </div>
   `,
@@ -35,7 +46,7 @@ import WKT from 'ol/format/WKT';
     .map-container {
       position: relative;
       width: 100%;
-      height: 500px;
+      height: 100%;
     }
     .map {
       width: 100%;
@@ -48,17 +59,10 @@ import WKT from 'ol/format/WKT';
       z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 8px;
     }
-    .control-button {
-      padding: 8px 12px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .control-button:hover {
-      background-color: #f0f0f0;
+    button mat-icon {
+      margin-right: 4px;
     }
   `]
 })
@@ -76,6 +80,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   isDrawModeActive = false;
 
   constructor(private thingsService: ThingsService) { }
+
 
   ngOnInit(): void {
     this.things$ = this.thingsService.getThings();
