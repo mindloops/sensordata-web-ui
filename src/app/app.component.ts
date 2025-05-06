@@ -30,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     <div class="app-container">
       <!-- Toolbar -->
-      <mat-toolbar color="primary" class="app-toolbar mat-elevation-z6">
+      <mat-toolbar class="app-toolbar">
         <img src="logo.svg" alt="Logo" class="logo">
         <span class="title">Sensordata Viewer</span>
       </mat-toolbar>
@@ -41,7 +41,7 @@ import { MatButtonModule } from '@angular/material/button';
           <div class="data-panel mat-elevation-z2">
             <mat-card appearance="outlined">
               <mat-card-header>
-                <mat-card-title>Sensor Data</mat-card-title>
+                <mat-card-title class="card-title">Sensors</mat-card-title>
               </mat-card-header>
               <mat-divider></mat-divider>
               <mat-card-content>
@@ -56,7 +56,7 @@ import { MatButtonModule } from '@angular/material/button';
           <div class="map-panel mat-elevation-z2">
             <mat-card appearance="outlined">
               <mat-card-header>
-                <mat-card-title>Map View</mat-card-title>
+                <mat-card-title class="card-title">Sensor map</mat-card-title>
               </mat-card-header>
               <mat-divider></mat-divider>
               <mat-card-content>
@@ -73,11 +73,8 @@ import { MatButtonModule } from '@angular/material/button';
         <div *ngIf="selectedThings.length > 0" class="charts-panel mat-elevation-z2" #chartsSection>
           <mat-card appearance="outlined">
             <mat-card-header>
-              <mat-card-title>
+              <mat-card-title class="card-title">
                 Measurements
-                <button mat-icon-button color="primary" class="back-to-map-btn" (click)="scrollToTop()">
-                  <mat-icon>arrow_upward</mat-icon>
-                </button>
               </mat-card-title>
             </mat-card-header>
             <mat-divider></mat-divider>
@@ -102,6 +99,10 @@ import { MatButtonModule } from '@angular/material/button';
     .app-toolbar {
       flex-shrink: 0;
       z-index: 10;
+      background-color: white;
+      color: rgba(0, 0, 0, 0.87);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
     }
 
     .scrollable-content {
@@ -111,7 +112,7 @@ import { MatButtonModule } from '@angular/material/button';
     }
 
     .logo {
-      height: 40px;
+      height: 50px;
       margin-right: 16px;
     }
 
@@ -161,10 +162,15 @@ import { MatButtonModule } from '@angular/material/button';
     }
 
     mat-card-header {
-      padding: 16px 16px 0 16px;
+      padding: 12px 16px 0 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 500;
     }
 
     .back-to-map-btn {
@@ -224,10 +230,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         block: 'start'
       });
     }
-  }
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private fetchThings(wkt: string): void {
