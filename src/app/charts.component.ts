@@ -52,7 +52,7 @@ echarts.use([BarChart, GridComponent, CanvasRenderer, TitleComponent, TooltipCom
     }
   `]
 })
-export class ChartsPageComponent implements OnInit, OnChanges {
+export class ChartsComponent implements OnInit, OnChanges {
   @Input() selectedThings: Thing[] = [];
   charts: { title: string; options: EChartsOption }[] = [];
 

@@ -5,11 +5,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import {DEFAULT_LOCATION_SELECTION, Thing} from './services/thing.model';
 import { MapComponent } from './map.component';
 import { TableComponent } from './sensor-table.component';
-import { ChartsPageComponent } from './charts-page.component';
+import { ChartsComponent } from './charts.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, MapComponent, TableComponent, ChartsPageComponent],
+  imports: [CommonModule, MapComponent, TableComponent, ChartsComponent],
   template: `
     <div class="app-container">
       <div class="menu">
@@ -17,11 +17,11 @@ import { ChartsPageComponent } from './charts-page.component';
         <h1>Sensordata viewer</h1>
       </div>
       <div class="content">
-        <app-data-table
+        <app-sensor-table
           class="data-table"
           [data$]="things$"
           (processSelected)="onProcessSelected($event)">
-        </app-data-table>
+        </app-sensor-table>
         <app-map
           class="map"
           (polygonComplete)="onPolygonComplete($event)"
@@ -34,7 +34,42 @@ import { ChartsPageComponent } from './charts-page.component';
       </app-charts-page>
     </div>
   `,
-  styleUrls: ['./app.component.css']
+  styles: `
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh; /* Make the container take up the full viewport height */
+      margin: 0;
+    }
+
+    .menu {
+      background-color: #f0f0f0;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .logo {
+      height: 100px; /* Adjust as needed */
+      margin-right: 10px;
+    }
+
+    .content {
+      display: flex;
+      flex-grow: 1; /* Allow content to grow and fill remaining space */
+    }
+
+    .data-table {
+      flex: 1;
+      overflow: auto; /* Enable scrolling if content overflows */
+    }
+
+    .map {
+      flex: 1;
+      overflow: hidden; /* Prevent map content from overflowing */
+    }
+  `
 })
 export class AppComponent implements OnInit {
   private thingsSubject = new BehaviorSubject<Thing[]>([]);

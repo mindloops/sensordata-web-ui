@@ -14,7 +14,7 @@ import {Thing} from './services/thing.model';
 import {MatChip} from '@angular/material/chips';
 
 @Component({
-  selector: 'app-data-table',
+  selector: 'app-sensor-table',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,7 +28,31 @@ import {MatChip} from '@angular/material/chips';
     MatChip,
   ],
   templateUrl: './sensor-table.component.html',
-  styleUrls: ['./sensor-table.component.css']
+  styles: `
+    .container {
+      padding: 20px;
+    }
+
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    .selection-summary {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .selection-summary p {
+      margin: 0;
+    }
+  `
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @Input() data$: Observable<Thing[]> | undefined; // Accept observable as input
